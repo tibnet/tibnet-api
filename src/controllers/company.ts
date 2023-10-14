@@ -1,6 +1,6 @@
 import { Order, OrderStatus } from '@prisma/client';
 import { createAccount, findAccount } from '@services/account.service';
-import { createDoctor, findDoctorDetails, findDoctorsByCompany } from '@services/doctors.service';
+import { createDoctor, findDoctorDetails, findDoctorSchedule, findDoctorsByCompany } from '@services/doctors.service';
 import { findOrderById, findOrdersByCompany, findOrdersByCompanyPacient, findOrdersByDoctor, findOrdersByPacient } from '@services/order.service';
 import { findPacientByCompany, findPacientsByCompany, findPacientsByDoctor } from '@services/pacient.service';
 import catchAsync from '@utils/catchAsync';
@@ -73,20 +73,14 @@ export const getDoctorSchedule = catchAsync(async (req, res, next) => {
     const doctorId = Number(req.params.id)
     const start = new Date(String(req.query.start))
     const end = new Date(String(req.query.end))
-    const status = OrderStatus.confirmed
 
-    const orders = await findOrdersByDoctor(doctorId, status, start, end)
-
-    const schedule: { date: Date, order?: Order }[] = []
-
-    
+    const schedule = await findDoctorSchedule(doctorId, start, end)
 
     res.json({
         success: true,
         schedule
     })
 })
-
 
 export const getDoctorPacients = catchAsync(async (req, res, next) => {
 

@@ -164,9 +164,12 @@ export const register = catchAsync(async (req, res, next) => {
         })
     }
 
+    const smsCode = randomCode()
+
     return res.json({
         success: true,
-        verificationId: createVerification(account.id, phone, randomCode()).uid
+        smsCode,
+        verificationId: createVerification(account.id, phone, smsCode).uid
     })
 })
 

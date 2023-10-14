@@ -1,4 +1,7 @@
+import { OrderStatus } from '.prisma/client'
 import prisma from './db'
+import { findOrdersByDoctor } from './order.service'
+import dateRange from '@utils/dateRange'
 
 export const findDoctorAccount = (accountId: number) => {
     return prisma.doctor.findUnique({
@@ -85,4 +88,20 @@ export const createDoctor = (accountId: number, companyId: number, firstName: st
             },
         }
     })
+}
+
+
+export const findDoctorSchedule = async (doctorId: number, start: Date, end: Date) => {
+    const orders = await findOrdersByDoctor(doctorId, OrderStatus.confirmed, start, end)
+    const dates = dateRange(start, end)
+
+    const meetings = dates.map(date => {
+        const order = orders.find(order => order.meetingAt == date)
+        return {
+            date,
+            order
+        }
+    })
+
+    return meetings
 }
