@@ -1,29 +1,65 @@
-import { confirmDoctorOrder, findOrderById, findOrdersByDoctor, rejectDoctorOrder } from '@services/order.service';
-import { findDoctorPacientDetails, findPacient, findPacientsByDoctor } from '@services/pacient.service';
+import { findCompanes, findCompanyDetails } from '@services/company.service';
+import { findDoctorDetails, findDoctorsByCompany, findDoctorsByCriteria } from '@services/doctors.service';
+import { findFeedback, findFeedbacksByPacient } from '@services/feedback.service';
+import { createOrder, findOrderById, findOrdersByPacient, rejectPacientOrder } from '@services/order.service';
 import catchAsync from '@utils/catchAsync';
 
-export const getPacients = catchAsync(async (req, res, next) => {
+export const getCompaines = catchAsync(async (req, res, next) => {
 
-    const { entityId } = res.locals.payload
-
-    const pacients = await findPacientsByDoctor(entityId)
-
+    const companies = await findCompanes()
+    
     res.json({
         success: true,
-        pacients
+        companies
     })
 })
 
-export const getPacientDetails = catchAsync(async (req, res, next) => {
+export const getCompanyDetails = catchAsync(async (req, res, next) => {
 
-    const { entityId } = res.locals.payload
     const id = Number(req.params.id)
 
-    const pacient = await findDoctorPacientDetails(entityId, id)
-
+    const company = await findCompanyDetails(id)
+    
     res.json({
         success: true,
-        ...pacient
+        ...company
+    })
+})
+
+export const getCompanyDoctors = catchAsync(async (req, res, next) => {
+
+    const id = Number(req.params.id)
+
+    const doctors = await findDoctorsByCompany(id)
+    
+    res.json({
+        success: true,
+        doctors
+    })
+})
+
+export const searchDoctors = catchAsync(async (req, res, next) => {
+
+    const { name, special } = req.query
+
+    const doctors = await findDoctorsByCriteria(String(name), String(special))
+    
+    res.json({
+        success: true,
+        doctors
+    })
+})
+
+export const getCompanyDoctorDetails = catchAsync(async (req, res, next) => {
+
+    const id = Number(req.params.id)
+    const doc_id = Number(req.params.doc_id)
+
+    const doctor = await findDoctorDetails(id, doc_id)
+    
+    res.json({
+        success: true,
+        ...doctor
     })
 })
 
@@ -31,7 +67,7 @@ export const getOrders = catchAsync(async (req, res, next) => {
 
     const { entityId } = res.locals.payload
 
-    const orders = await findOrdersByDoctor(entityId)
+    const orders = await findOrdersByPacient(entityId)
 
     res.json({
         success: true,
@@ -39,8 +75,20 @@ export const getOrders = catchAsync(async (req, res, next) => {
     })
 })
 
+export const postOrder = catchAsync(async (req, res, next) => {
 
-export const getOrder = catchAsync(async (req, res, next) => {
+    const { entityId } = res.locals.payload
+    const { doctorId, comment } = req.body
+
+    const order = await createOrder(entityId, doctorId, comment)
+
+    res.json({
+        success: true,
+        ...order
+    })
+})
+
+export const getOrderDetails = catchAsync(async (req, res, next) => {
 
     const id = Number(req.params.id)
 
@@ -52,25 +100,39 @@ export const getOrder = catchAsync(async (req, res, next) => {
     })
 })
 
-export const confirmOrder = catchAsync(async (req, res, next) => {
-
-    const id = Number(req.params.id)
-    const { meetingDate } = req.body
-
-    await confirmDoctorOrder(id, new Date(meetingDate))
-
-    res.json({
-        success: true,
-    })
-})
 
 export const rejectOrder = catchAsync(async (req, res, next) => {
 
     const id = Number(req.params.id)
 
-    await rejectDoctorOrder(id)
+    const order = await rejectPacientOrder(id)
 
     res.json({
         success: true,
+        ...order
+    })
+})
+
+export const getFeedbacks = catchAsync(async (req, res, next) => {
+    const { entityId } = res.locals.payload
+    
+    const feedbacks = await findFeedbacksByPacient(entityId)
+
+    res.json({
+        success: true,
+        feedbacks
+    })
+})
+
+
+export const getFeedbackDetails = catchAsync(async (req, res, next) => {
+    
+    const id = Number(req.params.id)
+    
+    const feedback = await findFeedback(id)
+
+    res.json({
+        success: true,
+        ...feedback
     })
 })

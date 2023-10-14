@@ -25,6 +25,24 @@ const commonOrderSelect = {
     status: true
 }
 
+export const createOrder = (pacientId: number, doctorId: number, comment: string) => {
+    return prisma.order.create({
+        data: {
+            comment,
+            pacient: {
+                connect: {
+                    id: pacientId
+                }
+            },
+            doctor: {
+                connect: {
+                    id: doctorId
+                }
+            }
+        }
+    })
+}
+
 export const findOrdersByCompany = (companyId: number) => {
     return prisma.order.findMany({
         where: {
@@ -117,6 +135,17 @@ export const confirmDoctorOrder = (id: number, meetingAt: Date) => {
 }
 
 export const rejectDoctorOrder = (id: number) => {
+    return prisma.order.update({
+        where: {
+            id
+        },
+        data: {
+            status: OrderStatus.canceled,
+        }
+    })
+}
+
+export const rejectPacientOrder = (id: number) => {
     return prisma.order.update({
         where: {
             id

@@ -70,6 +70,51 @@ export const findDoctorsByCompany = (companyId: number) => {
     })
 }
 
+
+export const findDoctorsByCriteria = (name?: string, special?: string) => {
+    return prisma.doctor.findMany({
+        where: {
+            specials: {
+                some: {
+                    name: {
+                        contains: special
+                    }
+                }
+            },
+            OR: [
+                {
+                    firstName: {
+                        contains: name
+                    }
+                },
+                {
+                    lastName: {
+                        contains: name
+                    }
+                }
+            ]
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            specials: {
+                select: {
+                    name: true,
+                    tags: true
+                }
+            },
+            services: {
+                select: {
+                    name: true,
+                    special: true,
+                    price: true,
+                }
+            },
+        }
+    })
+}
+
 export const createDoctor = (accountId: number, companyId: number, firstName: string, lastName: string, specials: number[], workDays: number[], services: number[]) => {
     return prisma.doctor.create({
         data: {

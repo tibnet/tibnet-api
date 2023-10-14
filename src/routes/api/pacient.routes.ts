@@ -1,10 +1,16 @@
+import { rejectOrder } from '@controllers/doctor'
+import { getCompaines, getCompanyDetails, getCompanyDoctorDetails, getCompanyDoctors, getFeedbackDetails, getFeedbacks, getOrderDetails, getOrders, postOrder, searchDoctors } from '@controllers/pacient'
 import { Router } from 'express'
 
 export default Router({ mergeParams: true })
-    .get("/companies")
-    .get("/companies/:id")
-    .get("/companies/:id/doctors")
-    .get("/companies/:id/doctors/:doc_id")
-    .get("/orders")
-    .get("/orders/:id")
-    .get("/orders/:id/reject")
+    .get("/companies", getCompaines)
+    .get("/companies/:id", getCompanyDetails)
+    .get("/companies/:id/doctors", getCompanyDoctors)
+    .get("/doctors", searchDoctors)
+    .get("/doctors/:doc_id", getCompanyDoctorDetails)
+    .get("/orders", getOrders)
+    .post("/orders", postOrder)
+    .get("/orders/:id", getOrderDetails)
+    .get("/orders/:id/reject", rejectOrder)
+    .get("/feedbacks", getFeedbacks)
+    .get("/feedbacks/:id", getFeedbackDetails)

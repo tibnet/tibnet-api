@@ -1,6 +1,6 @@
 import { createAccount, findAccount } from '@services/account.service';
 import { createDoctor, findDoctorDetails, findDoctorSchedule, findDoctorsByCompany } from '@services/doctors.service';
-import { findFeedbacks } from '@services/feedback.service';
+import { findFeedbacksByCompany } from '@services/feedback.service';
 import { findOrderById, findOrdersByCompany, findOrdersByCompanyPacient, findOrdersByDoctor, findOrdersByPacient } from '@services/order.service';
 import { findPacientByCompany, findPacientsByCompany, findPacientsByDoctor } from '@services/pacient.service';
 import catchAsync from '@utils/catchAsync';
@@ -170,7 +170,7 @@ export const getFeedbacks = catchAsync(async (req, res, next) => {
 
     const { entityId } = res.locals.payload
 
-    const feedbacks = await findFeedbacks(entityId)
+    const feedbacks = await findFeedbacksByCompany(entityId)
 
     res.json({
         success: true,
