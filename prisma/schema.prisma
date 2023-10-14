@@ -1,0 +1,121 @@
+generator pacient {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id       Int      @id @default(autoincrement())
+  phone    String   @unique
+  password String
+  role     UserType
+}
+
+model Company {
+  id        Int    @id @default(autoincrement())
+  name      String
+  TIN       String
+  phone     String
+  telegram  String
+  address   String
+  accountId Int    @unique
+}
+
+model Special {
+  id      Int       @id @default(autoincrement())
+  name    String
+  tags    String
+  doctors Doctor[]
+  Service Service[]
+}
+
+model Doctor {
+  id        Int        @id @default(autoincrement())
+  firstName String
+  lastName  String
+  specials  Special[]
+  workDays  WorkDay[]
+  services  Service[]
+  accountId Int        @unique
+  orders    Order[]
+  feedbacks Feedback[]
+}
+
+model WorkDay {
+  id         Int      @id @default(autoincrement())
+  day        String
+  startTime  DateTime
+  endTime    DateTime
+  startLunch DateTime
+  endLunch   DateTime
+  doctor     Doctor   @relation(fields: [doctorId], references: [id])
+  doctorId   Int
+}
+
+model Service {
+  id        Int     @id @default(autoincrement())
+  name      String
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+  doctorId  Int
+  special   Special @relation(fields: [specialId], references: [id])
+  specialId Int
+  price     Float
+}
+
+model Pacient {
+  id           Int        @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  lastActivity DateTime
+  accountId    Int        @unique
+  orders       Order[]
+  feedbacks    Feedback[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  pacient    Pacient     @relation(fields: [pacientId], references: [id])
+  pacientId  Int
+  doctor     Doctor      @relation(fields: [doctorId], references: [id])
+  doctorId   Int
+  comment    String
+  createdAt  DateTime    @default(now())
+  meetingAt  DateTime?
+  meetingKey String?
+  status     OrderStatus @default(new)
+}
+
+model Feedback {
+  id          Int            @id @default(autoincrement())
+  pacient     Pacient        @relation(fields: [pacientId], references: [id])
+  pacientId   Int
+  doctor      Doctor         @relation(fields: [doctorId], references: [id])
+  doctorId    Int
+  title       String
+  text        String
+  answerTitle String?
+  answerText  String?
+  attachment  String?
+  status      FeedbackStatus
+}
+
+enum UserType {
+  company
+  doctor
+  pacient
+}
+
+enum OrderStatus {
+  new
+  confirmed
+  canceled
+}
+
+enum FeedbackStatus {
+  new
+  viewing
+  answered
+}
