@@ -28,6 +28,25 @@ export const findPacientById = (id: number) => {
     })
 }
 
+export const findDoctorPacientDetails = (doctorId: number, id: number) => {
+    return prisma.pacient.findUnique({
+        where: {
+            id
+        },
+        select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            lastActivity: true,
+            orders: {
+                where: {
+                    doctorId
+                }
+            }
+        }
+    })
+}
+
 export const findPacientByCompany = (id: number, companyId: number) => {
     return prisma.pacient.findFirst({
         where: {

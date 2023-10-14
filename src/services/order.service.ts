@@ -103,3 +103,26 @@ export const findOrdersByPacient = (pacientId: number) => {
         select: commonOrderSelect
     })
 }
+
+export const confirmDoctorOrder = (id: number, meetingAt: Date) => {
+    return prisma.order.update({
+        where: {
+            id
+        },
+        data: {
+            meetingAt,
+            status: OrderStatus.confirmed,
+        }
+    })
+}
+
+export const rejectDoctorOrder = (id: number) => {
+    return prisma.order.update({
+        where: {
+            id
+        },
+        data: {
+            status: OrderStatus.canceled,
+        }
+    })
+}

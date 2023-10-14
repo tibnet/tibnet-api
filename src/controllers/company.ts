@@ -1,6 +1,6 @@
-import { Order, OrderStatus } from '@prisma/client';
 import { createAccount, findAccount } from '@services/account.service';
 import { createDoctor, findDoctorDetails, findDoctorSchedule, findDoctorsByCompany } from '@services/doctors.service';
+import { findFeedbacks } from '@services/feedback.service';
 import { findOrderById, findOrdersByCompany, findOrdersByCompanyPacient, findOrdersByDoctor, findOrdersByPacient } from '@services/order.service';
 import { findPacientByCompany, findPacientsByCompany, findPacientsByDoctor } from '@services/pacient.service';
 import catchAsync from '@utils/catchAsync';
@@ -155,6 +155,7 @@ export const getOrders = catchAsync(async (req, res, next) => {
 })
 
 export const getOrder = catchAsync(async (req, res, next) => {
+
     const id = Number(req.params.id)
 
     const orders = await findOrderById(id)
@@ -162,5 +163,17 @@ export const getOrder = catchAsync(async (req, res, next) => {
     res.json({
         success: true,
         orders
+    })
+})
+
+export const getFeedbacks = catchAsync(async (req, res, next) => {
+
+    const { entityId } = res.locals.payload
+
+    const feedbacks = await findFeedbacks(entityId)
+
+    res.json({
+        success: true,
+        feedbacks
     })
 })
