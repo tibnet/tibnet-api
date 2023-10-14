@@ -3,6 +3,12 @@ import prisma from './db'
 import { findOrdersByDoctor } from './order.service'
 import dateRange from '@utils/dateRange'
 
+interface WorkDay {
+    day: string
+    workTime: string
+    lunchTime: string
+}
+
 export const findDoctorAccount = (accountId: number) => {
     return prisma.doctor.findUnique({
         where: {
@@ -115,7 +121,7 @@ export const findDoctorsByCriteria = (name?: string, special?: string) => {
     })
 }
 
-export const createDoctor = (accountId: number, companyId: number, firstName: string, lastName: string, specials: number[], workDays: number[], services: number[]) => {
+export const createDoctor = (accountId: number, companyId: number, firstName: string, lastName: string, specials: number[], workDays: WorkDay[], services: number[]) => {
     return prisma.doctor.create({
         data: {
             accountId,
@@ -129,8 +135,16 @@ export const createDoctor = (accountId: number, companyId: number, firstName: st
                 connect: specials.map(id => ({ id }))
             },
             workDays: {
-                connect: workDays.map(id => ({ id }))
-            },
+                createMany: {
+                        data: workDays.map(day => (
+                        {
+                            day: day.day,
+                            workTime: day.workTime,
+                            lunchTime: day.lunchTime,
+                        }
+                    ))
+                }
+            }
         }
     })
 }

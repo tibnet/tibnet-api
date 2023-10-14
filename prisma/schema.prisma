@@ -55,10 +55,8 @@ model Doctor {
 model WorkDay {
   id         Int      @id @default(autoincrement())
   day        String
-  startTime  DateTime
-  endTime    DateTime
-  startLunch DateTime
-  endLunch   DateTime
+  workTime   String
+  lunchTime  String
   doctor     Doctor   @relation(fields: [doctorId], references: [id])
   doctorId   Int
 }

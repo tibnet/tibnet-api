@@ -1,8 +1,10 @@
 import { rejectOrder } from '@controllers/doctor'
 import { getCompaines, getCompanyDetails, getCompanyDoctorDetails, getCompanyDoctors, getFeedbackDetails, getFeedbacks, getOrderDetails, getOrders, postOrder, searchDoctors } from '@controllers/pacient'
+import authenticate from '@middlewares/authenticate'
 import { Router } from 'express'
 
 export default Router({ mergeParams: true })
+    .use(authenticate('pacient'))
     .get("/companies", getCompaines)
     .get("/companies/:id", getCompanyDetails)
     .get("/companies/:id/doctors", getCompanyDoctors)
@@ -11,6 +13,6 @@ export default Router({ mergeParams: true })
     .get("/orders", getOrders)
     .post("/orders", postOrder)
     .get("/orders/:id", getOrderDetails)
-    .get("/orders/:id/reject", rejectOrder)
+    .put("/orders/:id/reject", rejectOrder)
     .get("/feedbacks", getFeedbacks)
     .get("/feedbacks/:id", getFeedbackDetails)

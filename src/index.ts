@@ -2,7 +2,7 @@ import { requestLogger } from '@middlewares/index';
 import express from 'express'
 import cors from 'cors'
 
-import api from '@routes/api'
+import api from '@routes/api/api.routes'
 import { serverConfig } from '@configs/index'
 import prepare from '@configs/prepare';
 import helmet from 'helmet'
