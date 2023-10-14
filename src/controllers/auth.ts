@@ -160,9 +160,9 @@ export const register = catchAsync(async (req, res, next) => {
 })
 
 export const verify = catchAsync(async (req, res, next) => {
-    const { verificationId, code } = req.body
+    const { vid: verificationId, code } = req.query
 
-    const verfication = findVerification(verificationId)
+    const verfication = findVerification(String(verificationId))
 
     if (!verfication) {
         return res.json({
@@ -178,7 +178,7 @@ export const verify = catchAsync(async (req, res, next) => {
         })
     }
 
-    if (verfication.code != code) {
+    if (verfication.code != String(code)) {
         return res.json({
             success: false,
             message: "Wrong verification code"

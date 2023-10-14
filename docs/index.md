@@ -79,8 +79,29 @@ Response
 }
 ```
 
+**`GET /verify?vid=<verification-id>&code=<sms-code>`**
 
+Response
 
+``` ts
+{
+    success: boolean,
+    phone: string,
+    company: {
+        address: string;
+        name: string;
+        phone: string;
+        telegram: string;
+        TIN: string;
+    },
+    pacient: {
+        firstName: string;
+        lastName: string;
+    },
+    role: 'pacient' | 'company',
+    token: authToken,
+}
+```
 
 ## admin
 
