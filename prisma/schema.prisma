@@ -8,20 +8,24 @@ datasource db {
 }
 
 model Account {
-  id       Int      @id @default(autoincrement())
-  phone    String   @unique
-  password String
-  role     UserType
+  id         Int      @id @default(autoincrement())
+  phone      String   @unique
+  password   String
+  isActive   Boolean
+  isVerified Boolean
+  role       UserType
 }
 
 model Company {
-  id        Int    @id @default(autoincrement())
-  name      String
-  TIN       String
-  phone     String
-  telegram  String
-  address   String
-  accountId Int    @unique
+  id          Int     @id @default(autoincrement())
+  name        String
+  TIN         String
+  phone       String
+  telegram    String
+  address     String
+  countryCode String
+  isConfirmed Boolean @default(false)
+  accountId   Int     @unique
 }
 
 model Special {
@@ -100,6 +104,11 @@ model Feedback {
   answerText  String?
   attachment  String?
   status      FeedbackStatus
+}
+
+enum AccountStatus {
+  active
+  disabled
 }
 
 enum UserType {

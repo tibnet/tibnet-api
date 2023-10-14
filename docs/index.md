@@ -4,12 +4,12 @@ baseUrl: `/api/v1/`
 
 ## auth
 
-/login
+**`POST /login`**
 
-``` json
+``` ts
 {
-    "phone": "998911233212",
-    "password": "pass1234"
+    phone: string,
+    password: string
 }
 ```
 Response
@@ -19,16 +19,68 @@ Response
     success: boolean,
     phone: string,
     company: {
-        id: number;
         address: string;
         name: string;
         phone: string;
         telegram: string;
         TIN: string;
     },
+    doctor: {
+        firstName: string;
+        lastName: string;
+        specials: {
+            name: string;
+            tags: string;
+        }[];
+    },
+    pacient: {
+        firstName: string;
+        lastName: string;
+    },
     role: 'pacient' | 'company' | 'doctor',
     token: authToken,
-}```
+}
+```
+**`GET /checkPhone?phone=`**
+
+Response
+``` ts
+{
+    allowLogin: boolean
+}
+```
+
+**`POST /register`**
+```ts
+{   
+    type: 'pacient' | 'company', 
+    phone: string, 
+    password: string, 
+    pacinet: {
+        firstName: string
+        lastName: string
+    }, 
+    company: {
+        name: string, 
+        address: string, 
+        TIN: string, 
+        phone: string, 
+        telegram: string, 
+        countryCode: string
+    } 
+}
+```
+Response
+
+```ts
+{
+    success: boolean,
+    verificationId: string
+}
+```
+
+
+
 
 ## admin
 

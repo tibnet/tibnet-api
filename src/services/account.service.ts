@@ -15,7 +15,42 @@ export const createAccount = (phone: string, password: string, role: UserType) =
         data: {
             phone,
             password: hashPassword(password),
+            isActive: true,
+            isVerified: false,
             role
+        }
+    })
+}
+
+export const verifyAccount = (accountId: number) => {
+    return prisma.account.update({
+        where: {
+            id: accountId
+        },
+        data: {
+            isVerified: true
+        }
+    })
+}
+
+export const activateAccount = (accountId: number) => {
+    return prisma.account.update({
+        where: {
+            id: accountId
+        },
+        data: {
+            isActive: true
+        }
+    })
+}
+
+export const disableAccount = (accountId: number) => {
+    return prisma.account.update({
+        where: {
+            id: accountId
+        },
+        data: {
+            isActive: false
         }
     })
 }

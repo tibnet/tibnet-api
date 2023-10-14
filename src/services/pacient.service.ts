@@ -13,3 +13,14 @@ export const findPacient = (accountId: number) => {
         }
     })
 }
+
+export const createPacient = (accountId: number, firstName: string, lastName: string) => {
+    return prisma.pacient.create({
+        data: {
+            accountId,
+            firstName,
+            lastName,
+            lastActivity: new Date()
+        }
+    })
+}

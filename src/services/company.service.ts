@@ -12,6 +12,22 @@ export const findCompany = (accountId: number) => {
             phone: true,
             telegram: true,
             TIN: true,
+            isConfirmed: true
+        }
+    })
+}
+
+export const createCompany = (accountId: number, name: string, address: string, TIN: string, phone: string, telegram: string, countryCode: string) => {
+    return prisma.company.create({
+        data: {
+            name,
+            address,
+            TIN,
+            phone,
+            accountId,
+            countryCode,
+            telegram,
+            isConfirmed: false
         }
     })
 }
