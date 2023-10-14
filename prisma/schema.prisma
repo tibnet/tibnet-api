@@ -17,15 +17,17 @@ model Account {
 }
 
 model Company {
-  id          Int     @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
   TIN         String
   phone       String
   telegram    String
   address     String
   countryCode String
-  isConfirmed Boolean @default(false)
-  accountId   Int     @unique
+  isConfirmed Boolean    @default(false)
+  accountId   Int        @unique
+  doctors     Doctor[]
+  feedbacks    Feedback[]
 }
 
 model Special {
@@ -37,15 +39,17 @@ model Special {
 }
 
 model Doctor {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   firstName String
   lastName  String
+  company   Company   @relation(fields: [companyId], references: [id])
+  companyId Int
   specials  Special[]
   workDays  WorkDay[]
   services  Service[]
-  accountId Int        @unique
+  accountId Int       @unique
   orders    Order[]
-  feedbacks Feedback[]
+  isDeleted Boolean @default(false)
 }
 
 model WorkDay {
@@ -96,8 +100,8 @@ model Feedback {
   id          Int            @id @default(autoincrement())
   pacient     Pacient        @relation(fields: [pacientId], references: [id])
   pacientId   Int
-  doctor      Doctor         @relation(fields: [doctorId], references: [id])
-  doctorId    Int
+  company     Company        @relation(fields: [companyId], references: [id])
+  companyId   Int
   title       String
   text        String
   answerTitle String?

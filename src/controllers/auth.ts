@@ -5,7 +5,7 @@ import catchAsync from '@utils/catchAsync';
 import { createAccount, findAccount, verifyAccount } from '@services/account.service';
 import { UserType } from '@prisma/client';
 import { createCompany, findCompany } from '@services/company.service';
-import { findDoctor } from '@services/doctors.service';
+import { findDoctorAccount } from '@services/doctors.service';
 import { createVerification, findVerification, isVerificationExpired } from "@services/verification.service";
 import randomCode from "@utils/randomCode";
 import { createPacient, findPacient } from "@services/pacient.service";
@@ -45,13 +45,6 @@ export const login = catchAsync(async (req, res, next) => {
         })
     }
 
-    const payload: Payload = {
-        phone,
-        role: account.role
-    }
-
-    const authToken = await sign(payload)
-
     if (account.role == UserType.company) {
 
         const company = await findCompany(account.id)
@@ -63,38 +56,56 @@ export const login = catchAsync(async (req, res, next) => {
             })
         }
 
+        const payload: Payload = {
+            entityId: company.id,
+            phone,
+            role: account.role
+        }
+    
         return res.json({
             success: true,
             phone,
             company,
             role: account.role,
-            token: authToken,
+            token: await sign(payload),
         })
     }
 
     if (account.role == UserType.doctor) {
 
-        const doctor = await findDoctor(account.id)
+        const doctor = await findDoctorAccount(account.id)
+        
+        const payload: Payload = {
+            entityId: doctor!.id,
+            phone,
+            role: account.role
+        }
 
         return res.json({
             success: true,
             phone,
             doctor,
             role: account.role,
-            token: authToken,
+            token: await sign(payload),
         })
     }
 
     if (account.role == UserType.pacient) {
 
         const pacient = await findPacient(account.id)
+        
+        const payload: Payload = {
+            entityId: pacient!.id,
+            phone,
+            role: account.role
+        }
 
         return res.json({
             success: true,
             phone,
             pacient,
             role: account.role,
-            token: authToken,
+            token: await sign(payload),
         })
     }
 
@@ -187,13 +198,6 @@ export const verify = catchAsync(async (req, res, next) => {
 
     const account = await verifyAccount(verfication.accountId)
 
-    const payload: Payload = {
-        phone: account.phone,
-        role: account.role
-    }
-
-    const authToken = await sign(payload)
-
     if (account.role == UserType.company) {
 
         const company = await findCompany(account.id)
@@ -204,13 +208,19 @@ export const verify = catchAsync(async (req, res, next) => {
                 message: "Your account is not confirmed"
             })
         }
+        
+        const payload: Payload = {
+            entityId: company!.id,
+            phone: account.phone,
+            role: account.role
+        }
 
         return res.json({
             success: true,
             phone: account.phone,
             company,
             role: account.role,
-            token: authToken,
+            token: await sign(payload),
         })
     }
 
@@ -218,12 +228,18 @@ export const verify = catchAsync(async (req, res, next) => {
 
         const pacient = await findPacient(account.id)
 
+        const payload: Payload = {
+            entityId: pacient!.id,
+            phone: account.phone,
+            role: account.role
+        }
+
         return res.json({
             success: true,
             phone: account.phone,
             pacient,
             role: account.role,
-            token: authToken,
+            token: await sign(payload),
         })
     }
 
