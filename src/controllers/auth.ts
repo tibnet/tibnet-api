@@ -9,6 +9,7 @@ import { findDoctorAccount } from '@services/doctors.service';
 import { createVerification, findVerification, isVerificationExpired } from "@services/verification.service";
 import randomCode from "@utils/randomCode";
 import { createPacient, findPacient } from "@services/pacient.service";
+import { sendCode } from "@services/sms.service";
 
 export const login = catchAsync(async (req, res, next) => {
     const { phone, password } = req.body
@@ -170,6 +171,8 @@ export const register = catchAsync(async (req, res, next) => {
     }
 
     const smsCode = randomCode()
+
+    sendCode(phone, smsCode)
 
     return res.json({
         success: true,
