@@ -9,7 +9,8 @@ export const findPacient = (accountId: number) => {
             id: true,
             firstName: true,
             lastName: true,
-            lastActivity: true
+            lastActivity: true,
+            accountId: true
         }
     })
 }
@@ -23,7 +24,8 @@ export const findPacientById = (id: number) => {
             id: true,
             firstName: true,
             lastName: true,
-            lastActivity: true
+            lastActivity: true,
+            accountId: true
         }
     })
 }
@@ -42,7 +44,8 @@ export const findDoctorPacientDetails = (doctorId: number, id: number) => {
                 where: {
                     doctorId
                 }
-            }
+            },
+            accountId: true
         }
     })
 }
@@ -63,7 +66,8 @@ export const findPacientByCompany = (id: number, companyId: number) => {
             id: true,
             firstName: true,
             lastName: true,
-            lastActivity: true
+            lastActivity: true,
+            accountId: true
         }
     })
 }
@@ -75,7 +79,7 @@ export const createPacient = (accountId: number, firstName: string, lastName: st
             accountId,
             firstName,
             lastName,
-            lastActivity: new Date()
+            lastActivity: new Date(),
         }
     })
 }
@@ -93,7 +97,8 @@ export const findPacientsByDoctor = (doctorId: number) => {
             id: true,
             firstName: true,
             lastName: true,
-            lastActivity: true
+            lastActivity: true,
+            accountId: true
         }
     })
 }
@@ -113,7 +118,8 @@ export const findPacientsByCompany = (companyId: number) => {
             id: true,
             firstName: true,
             lastName: true,
-            lastActivity: true
+            lastActivity: true,
+            accountId: true
         }
     })
 }

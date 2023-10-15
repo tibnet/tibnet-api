@@ -1,5 +1,5 @@
 import { rejectOrder } from '@controllers/doctor'
-import { getCompaines, getCompanyDetails, getCompanyDoctorDetails, getCompanyDoctors, getFeedbackDetails, getFeedbacks, getOrderDetails, getOrders, postOrder, searchDoctors } from '@controllers/pacient'
+import { getCompaines, getCompanyDetails, getCompanyDoctorDetails, getCompanyDoctors, getFeedbackDetails, getFeedbacks, getMeetings, getOrderDetails, getOrders, joinMeeting, postOrder, searchDoctors } from '@controllers/pacient'
 import authenticate from '@middlewares/authenticate'
 import { Router } from 'express'
 
@@ -16,3 +16,5 @@ export default Router({ mergeParams: true })
     .put("/orders/:id/reject", rejectOrder)
     .get("/feedbacks", getFeedbacks)
     .get("/feedbacks/:id", getFeedbackDetails)
+    .get('/meetings', getMeetings)
+    .get('/meetings/:id/join', joinMeeting)

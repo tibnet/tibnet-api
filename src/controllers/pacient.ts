@@ -1,7 +1,10 @@
 import { findCompanes, findCompanyDetails } from '@services/company.service';
 import { findDoctorDetails, findDoctorsByCompany, findDoctorsByCriteria } from '@services/doctors.service';
 import { findFeedback, findFeedbacksByPacient } from '@services/feedback.service';
+import { findMeeting, findMeetings } from '@services/meeting.service';
 import { createOrder, findOrderById, findOrdersByPacient, rejectPacientOrder } from '@services/order.service';
+import { findPacient } from '@services/pacient.service';
+import { joinBBBMeeting } from '@services/tibnet.service';
 import catchAsync from '@utils/catchAsync';
 
 export const getCompaines = catchAsync(async (req, res, next) => {
@@ -134,5 +137,52 @@ export const getFeedbackDetails = catchAsync(async (req, res, next) => {
     res.json({
         success: true,
         ...feedback
+    })
+})
+
+
+export const getMeetings = catchAsync(async (req, res, next) => {
+
+    const { accountId } = res.locals.payload
+
+    const meetings = await findMeetings(accountId)
+
+    res.json({
+        success: true,
+        meetings
+    })
+})
+
+
+export const joinMeeting = catchAsync(async (req, res, next) => {
+
+    const { accountId } = res.locals.payload
+    const id = Number(req.params.id)
+    
+    const pacient = await findPacient(accountId)
+    const meeting = await findMeeting(id)
+
+    if (!meeting) {
+        return res.json({
+            success: false,
+            message: "Meeting not found"
+        })
+    }
+
+    const url = await joinBBBMeeting({
+        fullName: `${pacient?.firstName} ${pacient?.lastName}`,
+        meetingID: meeting.meetingID,
+        password: meeting.password,
+        role: "VIEWER"
+    })
+
+    res.json({
+        success: true,
+        meetingUrl: url
+    })
+
+    res.json({
+        success: true,
+        meeting
     })
 })

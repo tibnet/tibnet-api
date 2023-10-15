@@ -1,36 +1,40 @@
 import serverConfig from "@configs/server.config"
 import BigBlueButtonApi from "@utils/bbb"
 
-const testParams = {
-    name: "random-9998650",
-    meetingID: "random-9998650",
-    moderatorPW: "mp",
-    attendeePW: "ap",
-    welcome: "<br>Welcome to <b>%%CONFNAME%%</b>!",
-    fullName: "User 8584148",
-    password: "mp",
-    publish: false,
-    random: "416074726",
-    record: false,
-    recordID: "random-9998650",
-    voiceBridge: "75858"
-}
-
-const testJoinParams = {
-    fullName: "Guest",
-    meetingID: "random-9998650",
-    password: "mp",
-    role: "VIEWER",
-}
-
-console.log(serverConfig)
-
 const bbb = new BigBlueButtonApi(serverConfig.tibnetAPI, serverConfig.tibnetSecret)
 
-export const createMeeting = async (params: {} = testParams) => {
-    return bbb.query("create", params)
+interface CreateParams {
+    name: string,
+    meetingID: string,
+    fullName: string,
+    password: string,
+    recordID: string,
 }
 
-export const joinMeeting = async (params: {} = testJoinParams) => {
+
+interface JoinParams {
+    fullName: string,
+    meetingID: string,
+    password: string,
+    role: "VIEWER" | "MODERATOR",
+}
+
+export const createBBBMeeting = async (params: CreateParams) => {
+    return bbb.query("create", {
+        name: params.name,
+        meetingID: params.meetingID,
+        moderatorPW: "mp",
+        attendeePW: "ap",
+        fullName: params.fullName,
+        password: params.password,
+        publish: true,
+        random: "416074726",
+        record: true,
+        recordID: params.recordID,
+        voiceBridge: "75858"
+    })
+}
+
+export const joinBBBMeeting = async (params: JoinParams) => {
     return bbb.join(params)
 }

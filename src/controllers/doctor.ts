@@ -1,6 +1,10 @@
+import { findDoctorAccount } from '@services/doctors.service';
+import { createMeeting, findMeeting, findMeetings } from '@services/meeting.service';
 import { confirmDoctorOrder, findOrderById, findOrdersByDoctor, rejectDoctorOrder } from '@services/order.service';
-import { findDoctorPacientDetails, findPacient, findPacientsByDoctor } from '@services/pacient.service';
+import { findDoctorPacientDetails, findPacientsByDoctor } from '@services/pacient.service';
+import { createBBBMeeting, joinBBBMeeting } from '@services/tibnet.service';
 import catchAsync from '@utils/catchAsync';
+import { nanoid } from 'nanoid';
 
 export const getPacients = catchAsync(async (req, res, next) => {
 
@@ -72,5 +76,81 @@ export const rejectOrder = catchAsync(async (req, res, next) => {
 
     res.json({
         success: true,
+    })
+})
+
+export const getMeetings = catchAsync(async (req, res, next) => {
+
+    const { accountId } = res.locals.payload
+
+    const meetings = await findMeetings(accountId)
+
+    res.json({
+        success: true,
+        meetings
+    })
+})
+
+export const postMeeting = catchAsync(async (req, res, next) => {
+
+    const { accountId } = res.locals.payload
+    const { name, pacients } = req.body
+
+    const doctor = await findDoctorAccount(accountId)
+
+    const meeting = await createMeeting(name, accountId, pacients)
+
+    await createBBBMeeting({
+        fullName: `${doctor?.firstName} ${doctor?.lastName}`,
+        meetingID: meeting.meetingID,
+        name: name,
+        password: meeting.password,
+        recordID: meeting.recordID
+    })
+
+    const url = await joinBBBMeeting({
+        fullName: `${doctor?.firstName} ${doctor?.lastName}`,
+        meetingID: meeting.meetingID,
+        password: meeting.password,
+        role: "MODERATOR"
+    })
+
+    res.json({
+        success: true,
+        meetingUrl: url
+    })
+})
+
+export const joinMeeting = catchAsync(async (req, res, next) => {
+
+    const { accountId } = res.locals.payload
+    const id = Number(req.params.id)
+    
+    const doctor = await findDoctorAccount(accountId)
+
+    const meeting = await findMeeting(id)
+
+    if (!meeting) {
+        return res.json({
+            success: false,
+            message: "Meeting not found"
+        })
+    }
+
+    const url = await joinBBBMeeting({
+        fullName: `${doctor?.firstName} ${doctor?.lastName}`,
+        meetingID: meeting.meetingID,
+        password: meeting.password,
+        role: "VIEWER"
+    })
+
+    res.json({
+        success: true,
+        meetingUrl: url
+    })
+
+    res.json({
+        success: true,
+        meeting
     })
 })

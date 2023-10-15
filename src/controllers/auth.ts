@@ -58,6 +58,7 @@ export const login = catchAsync(async (req, res, next) => {
         }
 
         const payload: Payload = {
+            accountId: account.id,
             entityId: company.id,
             phone,
             role: account.role
@@ -77,6 +78,7 @@ export const login = catchAsync(async (req, res, next) => {
         const doctor = await findDoctorAccount(account.id)
         
         const payload: Payload = {
+            accountId: account.id,
             entityId: doctor!.id,
             phone,
             role: account.role
@@ -96,6 +98,7 @@ export const login = catchAsync(async (req, res, next) => {
         const pacient = await findPacient(account.id)
         
         const payload: Payload = {
+            accountId: account.id,
             entityId: pacient!.id,
             phone,
             role: account.role
@@ -219,6 +222,7 @@ export const verify = catchAsync(async (req, res, next) => {
         }
         
         const payload: Payload = {
+            accountId: account.id,
             entityId: company!.id,
             phone: account.phone,
             role: account.role
@@ -238,6 +242,7 @@ export const verify = catchAsync(async (req, res, next) => {
         const pacient = await findPacient(account.id)
 
         const payload: Payload = {
+            accountId: account.id,
             entityId: pacient!.id,
             phone: account.phone,
             role: account.role

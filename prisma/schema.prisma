@@ -14,6 +14,7 @@ model Account {
   isActive   Boolean
   isVerified Boolean
   role       UserType
+  meetings    Meeting[]
 }
 
 model Company {
@@ -27,7 +28,7 @@ model Company {
   isConfirmed Boolean    @default(false)
   accountId   Int        @unique
   doctors     Doctor[]
-  feedbacks    Feedback[]
+  feedbacks   Feedback[]
 }
 
 model Special {
@@ -49,16 +50,16 @@ model Doctor {
   services  Service[]
   accountId Int       @unique
   orders    Order[]
-  isDeleted Boolean @default(false)
+  isDeleted Boolean   @default(false)
 }
 
 model WorkDay {
-  id         Int      @id @default(autoincrement())
-  day        String
-  workTime   String
-  lunchTime  String
-  doctor     Doctor   @relation(fields: [doctorId], references: [id])
-  doctorId   Int
+  id        Int    @id @default(autoincrement())
+  day       String
+  workTime  String
+  lunchTime String
+  doctor    Doctor @relation(fields: [doctorId], references: [id])
+  doctorId  Int
 }
 
 model Service {
@@ -106,6 +107,17 @@ model Feedback {
   answerText  String?
   attachment  String?
   status      FeedbackStatus
+}
+
+model Meeting {
+  id        Int       @id @default(autoincrement())
+  name      String
+  meetingID String    @default(uuid())
+  recordID String    @default(uuid())
+  members   Account[]
+  ownerId   Int
+  password  String
+  createdAt DateTime @default(now())
 }
 
 enum AccountStatus {
