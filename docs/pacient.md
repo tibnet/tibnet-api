@@ -53,3 +53,11 @@ baseUrl: `/api/v1/`
 **`GET /pacient/feedbacks/:id`**
 
 ---
+
+**`GET /pacient/meetings`**
+
+---
+
+**`GET /pacient/meetings/:id/join`**
+
+---

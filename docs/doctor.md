@@ -30,3 +30,21 @@ baseUrl: `/api/v1/`
 ---
 
 **`PUT /doctor/orders/:id/reject`**
+
+
+---
+
+**`GET /doctor/meetings`**
+
+---
+
+**`POST /doctor/meetings`**
+
+```ts
+{
+    name: string, 
+    pacients: number[]
+}
+```
+
+**`GET /doctor/meetings/:id/join`**
