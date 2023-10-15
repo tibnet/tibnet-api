@@ -7,10 +7,12 @@ export const createMeeting = (name: string, ownerId: number, memebers: number[])
             name,
             ownerId,
             members: {
-                connect: memebers.map(memeber => ({
+                connect: [...memebers, ownerId].map(memeber => ({
                     id: memeber
                 }))
             },
+            moderatorPassword: nanoid(8),
+            attendeePassword: nanoid(8),
             password: nanoid(8)
         }
     })

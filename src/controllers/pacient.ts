@@ -172,7 +172,7 @@ export const joinMeeting = catchAsync(async (req, res, next) => {
     const url = await joinBBBMeeting({
         fullName: `${pacient?.firstName} ${pacient?.lastName}`,
         meetingID: meeting.meetingID,
-        password: meeting.password,
+        password: meeting.attendeePassword,
         role: "VIEWER"
     })
 

@@ -12,7 +12,7 @@ class BigBlueButtonApi {
         const url = this.api.getUrl(method, params)
         const resp = await axios.get(url)
         try {
-            return toJson(resp.data)
+            return JSON.parse(toJson(resp.data))
         }
         catch(e) {
             return resp.data

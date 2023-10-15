@@ -2,7 +2,7 @@ import { findDoctorAccount } from '@services/doctors.service';
 import { createMeeting, findMeeting, findMeetings } from '@services/meeting.service';
 import { confirmDoctorOrder, findOrderById, findOrdersByDoctor, rejectDoctorOrder } from '@services/order.service';
 import { findDoctorPacientDetails, findPacientsByDoctor } from '@services/pacient.service';
-import { createBBBMeeting, joinBBBMeeting } from '@services/tibnet.service';
+import { createBBBMeeting, findBBBRecords, joinBBBMeeting } from '@services/tibnet.service';
 import catchAsync from '@utils/catchAsync';
 import { nanoid } from 'nanoid';
 
@@ -104,14 +104,15 @@ export const postMeeting = catchAsync(async (req, res, next) => {
         fullName: `${doctor?.firstName} ${doctor?.lastName}`,
         meetingID: meeting.meetingID,
         name: name,
-        password: meeting.password,
+        moderatorPassword: meeting.moderatorPassword,
+        attendeePassword: meeting.attendeePassword,
         recordID: meeting.recordID
     })
 
     const url = await joinBBBMeeting({
         fullName: `${doctor?.firstName} ${doctor?.lastName}`,
         meetingID: meeting.meetingID,
-        password: meeting.password,
+        password: meeting.moderatorPassword,
         role: "MODERATOR"
     })
 
@@ -140,8 +141,8 @@ export const joinMeeting = catchAsync(async (req, res, next) => {
     const url = await joinBBBMeeting({
         fullName: `${doctor?.firstName} ${doctor?.lastName}`,
         meetingID: meeting.meetingID,
-        password: meeting.password,
-        role: "VIEWER"
+        password: meeting.moderatorPassword,
+        role: "MODERATOR"
     })
 
     res.json({
@@ -151,6 +152,29 @@ export const joinMeeting = catchAsync(async (req, res, next) => {
 
     res.json({
         success: true,
-        meeting
+        ...meeting
+    })
+})
+
+export const getMeetingRecordings = catchAsync(async (req, res, next) => {
+
+    const id = Number(req.params.id)
+    const meeting = await findMeeting(id)
+
+    if (!meeting) {
+        return res.json({
+            success: false,
+            message: "Meeting not found"
+        })
+    }
+
+    const recordings = await findBBBRecords({
+        meetingID: meeting.meetingID,
+        recordID: meeting.recordID
+    })
+
+    res.json({
+        success: true,
+        recordings
     })
 })

@@ -116,7 +116,9 @@ model Meeting {
   recordID String    @default(uuid())
   members   Account[]
   ownerId   Int
-  password  String
+  password    String
+  moderatorPassword  String @default("")
+  attendeePassword  String @default("")
   createdAt DateTime @default(now())
 }
 

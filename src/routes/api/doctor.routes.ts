@@ -1,4 +1,4 @@
-import { confirmOrder, getMeetings, getOrder, getOrders, getPacientDetails, getPacients, joinMeeting, postMeeting, rejectOrder } from '@controllers/doctor'
+import { confirmOrder, getMeetingRecordings, getMeetings, getOrder, getOrders, getPacientDetails, getPacients, joinMeeting, postMeeting, rejectOrder } from '@controllers/doctor'
 import authenticate from '@middlewares/authenticate'
 import { Router } from 'express'
 
@@ -13,3 +13,4 @@ export default Router({ mergeParams: true })
     .get('/meetings', getMeetings)
     .post('/meetings', postMeeting)
     .get('/meetings/:id/join', joinMeeting)
+    .get('/meetings/:id/records', getMeetingRecordings)

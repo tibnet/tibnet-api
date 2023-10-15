@@ -7,10 +7,10 @@ interface CreateParams {
     name: string,
     meetingID: string,
     fullName: string,
-    password: string,
+    moderatorPassword: string,
+    attendeePassword: string,
     recordID: string,
 }
-
 
 interface JoinParams {
     fullName: string,
@@ -19,22 +19,35 @@ interface JoinParams {
     role: "VIEWER" | "MODERATOR",
 }
 
+interface RecordParams {
+    meetingID: string,
+    recordID: string
+}
+
 export const createBBBMeeting = async (params: CreateParams) => {
     return bbb.query("create", {
         name: params.name,
         meetingID: params.meetingID,
-        moderatorPW: "mp",
-        attendeePW: "ap",
+        moderatorPW: params.moderatorPassword,
+        attendeePW: params.attendeePassword,
         fullName: params.fullName,
-        password: params.password,
+        password: params.moderatorPassword,
         publish: true,
         random: "416074726",
         record: true,
         recordID: params.recordID,
-        voiceBridge: "75858"
+        autoStartRecording: true,
+        allowStartStopRecording: false,
+        meetingLayout: "VIDEO_FOCUS",
+        learningDashboardEnabled: false,
+        disabledFeatures: "presentation,learningDashboard"
     })
 }
 
 export const joinBBBMeeting = async (params: JoinParams) => {
     return bbb.join(params)
+}
+
+export const findBBBRecords = async (params: RecordParams) => {
+    return bbb.query('getRecordings', params)
 }
