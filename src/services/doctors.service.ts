@@ -78,27 +78,18 @@ export const findDoctorsByCompany = (companyId: number) => {
 
 
 export const findDoctorsByCriteria = (name?: string, special?: string) => {
+
+    console.log(special)
+
     return prisma.doctor.findMany({
         where: {
             specials: {
                 some: {
                     name: {
-                        contains: special
+                        contains: special,
                     }
                 }
-            },
-            OR: [
-                {
-                    firstName: {
-                        contains: name
-                    }
-                },
-                {
-                    lastName: {
-                        contains: name
-                    }
-                }
-            ]
+            }
         },
         select: {
             id: true,
