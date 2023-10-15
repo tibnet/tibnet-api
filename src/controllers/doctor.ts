@@ -118,7 +118,8 @@ export const postMeeting = catchAsync(async (req, res, next) => {
 
     res.json({
         success: true,
-        meetingUrl: url
+        meetingUrl: url,
+        meetingId: meeting.id
     })
 })
 
