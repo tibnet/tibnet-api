@@ -119,9 +119,7 @@ export const login = catchAsync(async (req, res, next) => {
 export const checkPhone = catchAsync(async (req, res, next) => {
     const { phone } = req.query
 
-    console.log(phone)
-
-    const account = await findAccount("+" + String(phone).trim())
+    const account = await findAccount(String(phone).trim())
 
     console.log(account)
     console.log(account != null)
